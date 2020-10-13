@@ -72,7 +72,6 @@ class DeviceTypeCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(DeviceTypeRequest::class);
-
         CRUD::field('type');
     }
 

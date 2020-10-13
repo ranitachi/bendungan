@@ -1,1 +1,0 @@
-<a href="" class="btn btn-success"><i class="fa fa-user"></i> {{ backpack_user()->name }}</a>
