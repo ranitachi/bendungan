@@ -1,0 +1,221 @@
+@font-face {
+  font-family: 'weather';
+  src: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/artill_clean_icons-webfont.eot");
+  src: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/artill_clean_icons-webfont.eot?#iefix") format("embedded-opentype"), url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/artill_clean_icons-webfont.woff") format("woff"), url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/artill_clean_icons-webfont.ttf") format("truetype"), url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/artill_clean_icons-webfont.svg#artill_clean_weather_iconsRg") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+/* ==========================================================================
+   BASIC STYLE
+   ========================================================================== */
+html,
+body {
+  width: 100%;
+  height: 100% !important;
+  min-height: 100% !important; }
+
+body {
+  color: #6c6c6c; }
+
+::-moz-selection {
+  color: #fff;
+  background: #357fc6; }
+
+::selection {
+  color: #fff;
+  background: #357fc6; }
+
+::-webkit-selection {
+  color: #fff;
+  background: #357fc6; }
+
+a {
+  color: #1B4165;
+  -webkit-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out; }
+
+a:hover, a:focus {
+  color: #010304; }
+
+*:focus {
+  outline: none; }
+
+form ::-webkit-input-placeholder {
+  color: #a9a9a9; }
+
+form :-moz-placeholder {
+  color: #a9a9a9; }
+
+form ::-moz-placeholder {
+  color: #a9a9a9; }
+
+form :-ms-input-placeholder {
+  color: #a9a9a9; }
+
+#weather {
+  position: absolute;
+  top: 100px;
+  left: 0;
+  width: 100%;
+  color: white;
+  text-align: center; }
+  #weather .icon-0:before {
+    content: ":"; }
+  #weather .icon-1:before {
+    content: "p"; }
+  #weather .icon-2:before {
+    content: "S"; }
+  #weather .icon-3:before {
+    content: "Q"; }
+  #weather .icon-4:before {
+    content: "S"; }
+  #weather .icon-5:before {
+    content: "W"; }
+  #weather .icon-6:before {
+    content: "W"; }
+  #weather .icon-7:before {
+    content: "W"; }
+  #weather .icon-8:before {
+    content: "W"; }
+  #weather .icon-9:before {
+    content: "I"; }
+  #weather .icon-10:before {
+    content: "W"; }
+  #weather .icon-11:before {
+    content: "I"; }
+  #weather .icon-12:before {
+    content: "I"; }
+  #weather .icon-13:before {
+    content: "I"; }
+  #weather .icon-14:before {
+    content: "I"; }
+  #weather .icon-15:before {
+    content: "W"; }
+  #weather .icon-16:before {
+    content: "I"; }
+  #weather .icon-17:before {
+    content: "W"; }
+  #weather .icon-18:before {
+    content: "U"; }
+  #weather .icon-19:before {
+    content: "Z"; }
+  #weather .icon-20:before {
+    content: "Z"; }
+  #weather .icon-21:before {
+    content: "Z"; }
+  #weather .icon-22:before {
+    content: "Z"; }
+  #weather .icon-23:before {
+    content: "Z"; }
+  #weather .icon-24:before {
+    content: "E"; }
+  #weather .icon-25:before {
+    content: "E"; }
+  #weather .icon-26:before {
+    content: "3"; }
+  #weather .icon-27:before {
+    content: "a"; }
+  #weather .icon-28:before {
+    content: "A"; }
+  #weather .icon-29:before {
+    content: "a"; }
+  #weather .icon-30:before {
+    content: "A"; }
+  #weather .icon-31:before {
+    content: "6"; }
+  #weather .icon-32:before {
+    content: "1"; }
+  #weather .icon-33:before {
+    content: "6"; }
+  #weather .icon-34:before {
+    content: "1"; }
+  #weather .icon-35:before {
+    content: "W"; }
+  #weather .icon-36:before {
+    content: "1"; }
+  #weather .icon-37:before {
+    content: "S"; }
+  #weather .icon-38:before {
+    content: "S"; }
+  #weather .icon-39:before {
+    content: "S"; }
+  #weather .icon-40:before {
+    content: "M"; }
+  #weather .icon-41:before {
+    content: "W"; }
+  #weather .icon-42:before {
+    content: "I"; }
+  #weather .icon-43:before {
+    content: "W"; }
+  #weather .icon-44:before {
+    content: "a"; }
+  #weather .icon-45:before {
+    content: "S"; }
+  #weather .icon-46:before {
+    content: "U"; }
+  #weather .icon-47:before {
+    content: "S"; }
+  #weather .icon-weather {
+    color: #fff;
+    font-family: weather;
+    font-size: 96px;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1.0;
+    text-transform: none; }
+  #weather h2 {
+    line-height: 1; }
+
+.full-height {
+  height: 100vh; }
+
+.menu-item {
+  background-color: #f5f5f5; }
+  .menu-item:hover {
+    text-decoration: none;
+    background-color: #e6e6e6; }
+
+.bg-cover {
+  position: absolute;
+  left: -10%;
+  top: -10%;
+  width: 120%;
+  height: 120%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover; }
+
+.carousel.carousel-news {
+  margin-bottom: 150px;
+  bottom: 0; }
+  .carousel.carousel-news .carousel-cell {
+    width: 300px;
+    margin-right: 15px;
+    margin-left: 15px; }
+    .carousel.carousel-news .carousel-cell .card {
+      background-color: rgba(255, 255, 255, 0.5);
+      border-color: transparent; }
+
+.navbar {
+  background-color: rgba(255, 255, 255, 0.5); }
+
+.footer.position-absolute {
+  bottom: 0; }
+
+.drawer-nav {
+  position: fixed;
+  z-index: 1050;
+  top: 0;
+  overflow: hidden;
+  width: 260px;
+  width: 16.25rem;
+  height: 100%;
+  color: #222;
+  background-color: #fff; }
+
+  .hidden{
+    display:none !important;
+  }
+  .show{
+    display:inline !important;
+  }
