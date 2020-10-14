@@ -124,7 +124,7 @@ class User extends Model
             $fileExtension       = $image->extension();
             $originalImagePath   = \Image::make($image->getRealPath());
             
-            $uniqueName = $this->attributes['id'].'-'.uniqid() . time();
+            $uniqueName = $this->id.'-'.uniqid() . time();
     
             $mediumObject   = $originalImagePath;
             $mediumObject->resize(500, null, function ($constraint) {
