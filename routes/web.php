@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function(){
     return redirect('admin/login');
 })->name('home');
+Route::get('/home', function(){
+    return redirect('admin/dashboard');
+});
 Route::get('/perizinan', 'PerizinanController@index')->name('perizinan.index');
 Route::get('/rumah-sakit/balaraja', 'RumahSakitController@balaraja')->name('rs.index');
 
