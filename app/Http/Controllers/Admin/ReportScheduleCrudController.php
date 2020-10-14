@@ -133,6 +133,43 @@ class ReportScheduleCrudController extends CrudController
      */
     protected function setupUpdateOperation()
     {
-        $this->setupCreateOperation();
+        CRUD::setValidation(ReportScheduleRequest::class);
+
+        CRUD::addField([
+                'label' => 'Nama Perangkat',
+                'type' => 'select2',
+                'name' => 'device_id',
+                'entity' => 'device',
+                'placeholder' => true,
+                'attributes' => ['step' => 'any'],
+                'allows_null' => false,
+            ]);
+
+        
+        CRUD::addField([
+                'label' => 'Nama Petugas',
+                'type' => 'select2',
+                'name' => 'user_id',
+                'attribute' => 'name',
+                'model' => "App\Models\User",
+                'placeholder' => true,
+                'options'   => (function ($query) {
+                    return $query->orderBy('name', 'ASC')->where('level', 4)->get();
+                })
+            ]);
+        CRUD::addField([
+                  'name' => 'scheduled_at',
+                  'label' => 'Tanggal Rencana Pelaksanaan',
+                  'type' => 'datetime',
+                  'attributes' => ['class'=>'form-control col-md-3']
+              ]);
+        CRUD::addField([
+                'label' => 'Nama Petugas',
+                'type' => 'select2',
+                'name' => 'reporting_status',
+                'attribute' => 'name',
+                'model' => "App\Models\ReportStatus",
+                'placeholder' => true
+            ]);
     }
 }
