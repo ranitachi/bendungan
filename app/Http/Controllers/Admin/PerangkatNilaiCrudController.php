@@ -50,7 +50,7 @@ class PerangkatNilaiCrudController extends CrudController
 
         $this->crud->setValidation(PerangkatNilaiRequest::class);
 
-        $perangkats = PerangkatNilai::where('nama_perangkat','!=',"")->groupBy('nama_perangkat')->get();
+        $perangkats = PerangkatNilai::select('nama_perangkat')->where('nama_perangkat','!=',"")->groupBy('nama_perangkat')->get();
         $perangkat = array();
         foreach($perangkats as $idx => $val)
         {
@@ -106,7 +106,7 @@ class PerangkatNilaiCrudController extends CrudController
         // return $getdata;
         $this->crud->setValidation(PerangkatNilaiRequest::class);
 
-        $perangkats = PerangkatNilai::where('nama_perangkat','!=',"")->groupBy('nama_perangkat')->get();
+        $perangkats = PerangkatNilai::select('nama_perangkat')->where('nama_perangkat','!=',"")->groupBy('nama_perangkat')->get();
         $perangkat = array();
         foreach($perangkats as $idx => $val)
         {
