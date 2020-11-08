@@ -24,6 +24,8 @@ Route::get('/home', function(){
 Route::get('/perizinan', 'PerizinanController@index')->name('perizinan.index');
 Route::get('/rumah-sakit/balaraja', 'RumahSakitController@balaraja')->name('rs.index');
 
+Route::get('import-excel', 'Admin\PerangkatNilaiCrudController@import');
+
 Route::get('/device-atrribute', function(){
     $data = array();
     $device = Device::all();

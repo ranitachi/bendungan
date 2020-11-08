@@ -28,4 +28,6 @@ Route::group([
     Route::crud('reportschedule', 'ReportScheduleCrudController');
     Route::crud('bucketfile', 'BucketFileCrudController');
     Route::crud('laporanpendataan', 'LaporanPendataanCrudController');
+    Route::crud('perangkatnilai', 'PerangkatNilaiCrudController');
+    Route::post('perangkatnilai-grafik', 'PerangkatNilaiCrudController@grafik');
 }); // this should be the absolute last line of this file

@@ -305,6 +305,12 @@
                                         <span class="menu-text">Laporan Pendataan</span>
                                     </a>
                                 </li>
+                                <li class="menu-item" aria-haspopup="true">
+                                    <a href="{{ backpack_url('perangkatnilai') }}" class="menu-link">
+                                        <i class="menu-icon far fa-chart-bar"></i>
+                                        <span class="menu-text">Grafik Perangkat</span>
+                                    </a>
+                                </li>
                                 @if (backpack_user()->level==1)
                                     <li class="menu-item" aria-haspopup="true">
                                         <a href="{{ backpack_url('user') }}" class="menu-link">

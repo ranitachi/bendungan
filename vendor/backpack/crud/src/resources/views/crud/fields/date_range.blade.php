@@ -34,6 +34,7 @@
         'autoApply' => true,
         'startDate' => $start_default,
         'endDate' => $end_default,
+        'showDropdowns' => true,
     ], $field['date_range_options'] ?? []);
 ?>
 

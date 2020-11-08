@@ -25,7 +25,9 @@ final class Versions
     public const VERSIONS          = array (
   'asm89/stack-cors' => '1.3.0@b9c31def6a83f84b4d4a40d35996d375755f0e08',
   'backpack/crud' => '4.1.25@23fb1ed5153d5465d49d2fe1ca265a5985c78877',
+  'balping/json-raw-encoder' => 'v1.0.1@e2b0ab888342b0716f1f0628e2fa13b345c5f276',
   'brick/math' => '0.8.15@9b08d412b9da9455b210459ff71414de7e6241cd',
+  'consoletvs/charts' => '6.5.5@0005d14e4fe6715f4146a4dc3b56add768233001',
   'creativeorange/gravatar' => 'v1.0.20@8c2c1a3a59fdf05f50c9d9413dd9d2d50835e017',
   'dnoegel/php-xdg-base-dir' => 'v0.1.1@8f8a6e48c5ecb0f991c2fdcf5f154a47d85f9ffd',
   'doctrine/cache' => '1.10.2@13e3381b25847283a91948d04640543941309727',
@@ -140,7 +142,7 @@ final class Versions
   'sebastian/version' => '2.0.1@99732be0ddb3361e16ad77b68ba41efc8e979019',
   'theseer/tokenizer' => '1.2.0@75a63c33a8577608444246075ea0af0d052e452a',
   'webmozart/assert' => '1.9.1@bafc69caeb4d49c39fd0779086c03a3738cbb389',
-  'laravel/laravel' => 'dev-master@4b6f0f17b2036f55afc1793027cb54f86fdcf9b2',
+  'laravel/laravel' => 'dev-main@e64ce27ad591d011843aaf22380920d896487cdd',
 );
 
     private function __construct()
