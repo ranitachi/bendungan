@@ -47,7 +47,10 @@ class PerangkatNilai extends Model
     | ACCESSORS
     |--------------------------------------------------------------------------
     */
-
+    public function tableList($crud = false)
+    {
+        return '<a class="btn btn-sm btn-warning" href="'.route('perangkatnilai.list').'" data-toggle="tooltip" title="List Nilai"><i class="fa fa-list"></i> List Nilai Perangkat</a>';
+    }
     /*
     |--------------------------------------------------------------------------
     | MUTATORS
@@ -58,6 +61,13 @@ class PerangkatNilai extends Model
     {
         $date = ((int)$value - 25569) * 86400;
         $this->attributes['tanggal'] = date('Y-m-d',$date);
+        $this->attributes['tanggal_excel'] = $date;
+    }
+    public function setTanggalAttribute($value)
+    {
+        // $date = ((int)$value - 25569) * 86400;
+        $date = strtotime($value);
+        $this->attributes['tanggal'] = $value;
         $this->attributes['tanggal_excel'] = $date;
     }
 }

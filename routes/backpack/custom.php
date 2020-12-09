@@ -29,5 +29,6 @@ Route::group([
     Route::crud('bucketfile', 'BucketFileCrudController');
     Route::crud('laporanpendataan', 'LaporanPendataanCrudController');
     Route::crud('perangkatnilai', 'PerangkatNilaiCrudController');
+    Route::get('perangkatnilai-list', 'PerangkatNilaiCrudController@list')->name('perangkatnilai.list');
     Route::post('perangkatnilai-grafik', 'PerangkatNilaiCrudController@grafik');
 }); // this should be the absolute last line of this file

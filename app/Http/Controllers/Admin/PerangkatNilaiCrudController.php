@@ -39,14 +39,15 @@ class PerangkatNilaiCrudController extends CrudController
 
         
         // $this->crud->setListView('backpack::crud.perangkat-nilai.index');
-
+        
     }
     // protected function setupListOperation()
     public function index(Request $request)
     {
-        $this->crud->removeButton('create');
+        // $this->crud->removeButton('create');
         $this->crud->removeButton('show');
         $this->crud->removeButton('delete');
+        $this->crud->addButtonFromModelFunction('top', 'table_list', 'tableList', 'end');
 
         $this->crud->setValidation(PerangkatNilaiRequest::class);
 
@@ -84,6 +85,31 @@ class PerangkatNilaiCrudController extends CrudController
             ]);
         return view('backpack::crud.perangkat-nilai.index')->with('crud',$this->crud);
     }
+
+    public function list(Request $request)
+    {
+        $cari = $request->cari;
+        if(isset($request->cari))
+        {
+            if($cari!='')
+            {
+                $data = PerangkatNilai::where('nama_perangkat','like',"%$cari%")
+                                        ->orWhere('tanggal','like',"%$cari%")
+                                        ->orWhere('nilai','like',"%$cari%")
+                                        ->orderBy('tanggal','desc')->paginate(10);
+            }
+            else
+                $data = PerangkatNilai::orderBy('tanggal','desc')->paginate(10);
+        }
+        else
+        {
+            $data = PerangkatNilai::orderBy('tanggal','desc')->paginate(10);
+        }
+        return view('backpack::crud.perangkat-nilai.list')
+                    ->with('data',$data)
+                    ->with('crud',$this->crud);
+    }
+
     public function grafik(Request $request)
     {
         $this->crud->removeButton('create');
@@ -230,13 +256,49 @@ class PerangkatNilaiCrudController extends CrudController
     {
         CRUD::setValidation(PerangkatNilaiRequest::class);
 
-        CRUD::setFromDb(); // fields
+        $perangkats = PerangkatNilai::select('nama_perangkat')->where('nama_perangkat','!=',"")->groupBy('nama_perangkat')->get();
+        $perangkat = array();
+        foreach($perangkats as $idx => $val)
+        {
+            $perangkat[$val->nama_perangkat]=$val->nama_perangkat;
+        }
+        
+        CRUD::addField([  // Select2
+            'label'     => "Perangkat",
+            'type'      => 'select2_from_array',
+            'name'      => 'nama_perangkat', 
+            'allows_null' => false,
+            'placeholder' => '-Pilih-',
+            'wrapper'   => [ 
+                    'class'      => 'form-group col-md-7'
+                ],
+            'options'   => $perangkat
+        ]);
+        CRUD::addField([
+            'type' => 'date',
+            'name' => 'tanggal',
+            'label' => 'Tanggal',
+            'wrapper'   => [ 
+                    'class'      => 'form-group col-md-7'
+                ],
+        ]);
+        CRUD::addField([
+            'type' => 'text',
+            'name' => 'nilai',
+            'label' => 'Nilai',
+            'wrapper'   => [ 
+                    'class'      => 'form-group col-md-7'
+                ],
+        ]);
+        CRUD::addField([
+            'type' => 'textarea',
+            'name' => 'keterangan',
+            'label' => 'Keterangan',
+            'wrapper'   => [ 
+                    'class'      => 'form-group col-md-7'
+                ],
+        ]);
 
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
-         */
     }
 
     /**
