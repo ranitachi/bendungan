@@ -13,3 +13,4 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('bucketfile') }}'><i class='nav-icon la la-question'></i> BucketFiles</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('laporanpendataan') }}'><i class='nav-icon la la-question'></i> LaporanPendataans</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('perangkatnilai') }}'><i class='nav-icon la la-question'></i> PerangkatNilais</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('unitperangkat') }}'><i class='nav-icon la la-question'></i> UnitPerangkats</a></li>

@@ -10,7 +10,7 @@ class Device extends Model
     use \Backpack\CRUD\app\Models\Traits\CrudTrait;
     use SoftDeletes;
     protected $table = 'devices';
-    protected $fillable = ['name','description','code','status','latitude','longitude','device_type_id'];
+    protected $fillable = ['name','description','code','status','latitude','longitude','device_type_id','nilai_level'];
     protected $hidden = ['created_at','updated_at','deleted_at'];
     
     function dev_type()

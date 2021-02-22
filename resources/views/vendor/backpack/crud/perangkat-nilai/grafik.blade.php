@@ -71,8 +71,8 @@
 									
 								</form>
 								<div class="row" style="margin-top:20px;">
-									<div class="col-md-12">
-										<h3>Grafik Perangkat : {{ $nama_perangkat }}</h3>
+									<div class="col-md-12 text-center">
+										<h3>Grafik Perangkat : {{ implode(',',$get_perangkat) }}</h3>
 										<h5>Tanggal : {{ date('d-m-Y',strtotime($start_date)) }} s.d. {{ date('d-m-Y',strtotime($end_date)) }}</h5>
 									</div>
 									<div class="col-md-12">
@@ -126,49 +126,65 @@
 		<script>
 		// function grafik_nilai() {
 			const apexChart = "#grafik-nilai";
+			
 			var options = {
-				title: {
-					// text: 'Grafik Perangkat : {{ $nama_perangkat }}',
-					align: 'left',
-					margin: 4,
-					offsetX: 0,
-					offsetY: 0,
-					floating: false,
-					style: {
-					fontSize:  '14px',
-					fontWeight:  'bold',
-					color:  '#263238'
-					},
-				},
-				series: [{
-					name: "",
-					data: <?php echo json_encode($data_y); ?>
-				}],
+				series: <?php echo json_encode($data_y); ?>,
 				chart: {
-					height: 450,
+					height: 350,
 					type: 'line',
-					zoom: {
-						enabled: false
+					dropShadow: {
+						enabled: true,
+						color: '#000',
+						top: 18,
+						left: 7,
+						blur: 10,
+						opacity: 0.2
+					},
+					toolbar: {
+						show: false
 					}
 				},
-				dataLabels: { 	
-					enabled: false
+				colors: ['#77B6EA', '#545454'],
+				dataLabels: {
+					enabled: true,
 				},
 				stroke: {
-					curve: 'straight'
+					curve: 'smooth'
+				},
+				title: {
+					align: 'left'
 				},
 				grid: {
+					borderColor: '#e7e7e7',
 					row: {
 						colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
 						opacity: 0.5
 					},
 				},
-				xaxis: {
-					categories: <?php echo json_encode($data_x); ?>
+				markers: {
+					size: 1
 				},
-				colors: [primary]
+				xaxis: {
+					categories: <?php echo json_encode($data_x); ?>,
+					title: {
+						text: 'Tanggal'
+					}
+				},
+				yaxis: {
+					title: {
+						text: 'Tinggi Muka Air'
+					},
+					min: 0,
+					max: 40
+				},
+				legend: {
+					position: 'top',
+					horizontalAlign: 'right',
+					floating: true,
+					offsetY: -25,
+					offsetX: -5
+				}
 			};
-
 			var chart = new ApexCharts(document.querySelector(apexChart), options);
 			chart.render();
 		// }

@@ -281,6 +281,12 @@
                                         <span class="menu-text">Data Perangkat Sensor</span>
                                     </a>
                                 </li>
+                                {{-- <li class="menu-item" aria-haspopup="true">
+                                    <a href="{{ backpack_url('unitperangkat') }}" class="menu-link">
+                                        <i class="menu-icon flaticon-cogwheel-1"></i>
+                                        <span class="menu-text">Data Unit Perangkat</span>
+                                    </a>
+                                </li> --}}
                                 <li class="menu-item" aria-haspopup="true">
                                     <a href="{{ backpack_url('deviceposition') }}" class="menu-link">
                                         <i class="menu-icon fas fa-map-marker-alt"></i>

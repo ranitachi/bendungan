@@ -31,4 +31,6 @@ Route::group([
     Route::crud('perangkatnilai', 'PerangkatNilaiCrudController');
     Route::get('perangkatnilai-list', 'PerangkatNilaiCrudController@list')->name('perangkatnilai.list');
     Route::post('perangkatnilai-grafik', 'PerangkatNilaiCrudController@grafik');
+    Route::crud('unitperangkat', 'UnitPerangkatCrudController');
 }); // this should be the absolute last line of this file
+

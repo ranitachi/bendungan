@@ -10,6 +10,7 @@ use App\Models\DeviceImage;
 use App\Models\DeviceProperty;
 use App\Models\DevicePropertyName;
 use App\Models\DevicePropertyUnit;
+use Illuminate\Http\Request;
 use App\Http\Requests\DeviceRequest;
 use App\Http\Requests\DeviceRequest as StoreRequest;
 use App\Http\Requests\DeviceRequest as UpdateRequest;
@@ -194,10 +195,15 @@ class DeviceCrudController extends CrudController
         CRUD::removeButton('show');
 
         CRUD::enableDetailsRow();
-
+        CRUD::orderBy('device_type_id','asc');
+        CRUD::orderBy('name','asc');
         CRUD::addColumn([   
                 'label' => 'Nama Perangkat',
                 'name' => 'name',
+            ]);
+        CRUD::addColumn([    
+                'label' => 'Nilai Level',
+                'name' => 'nilai_level',
             ]);
         CRUD::addColumn([    
                 'label' => 'Keterangan',
@@ -211,7 +217,7 @@ class DeviceCrudController extends CrudController
             'name' => 'status',
             'label' => 'Status',
             'type' => 'select_from_array',
-            'options' => ['1' => 'Aktif', '0' => 'Tidak Aktif','2'=>'Maintenance'],
+            'options' => ['1' => 'Aktif', '0' => 'Tidak Aktif','2'=>'Maintenance','3'=>'Rusak'],
         ]);
         CRUD::addColumn([
                 'name' => 'device_type',
@@ -240,6 +246,10 @@ class DeviceCrudController extends CrudController
                 'name' => 'name',
             ]);
         CRUD::addField([
+                'label' => 'Nilai Level',
+                'name' => 'nilai_level',
+            ]);
+        CRUD::addField([
                 'label' => 'Keterangan',
                 'name' => 'description',
             ]);
@@ -251,7 +261,7 @@ class DeviceCrudController extends CrudController
             'name' => 'status',
             'label' => 'Status',
             'type' => 'select_from_array',
-            'options' => ['1' => 'Aktif', '0' => 'Tidak Aktif'],
+            'options' => ['1' => 'Aktif', '0' => 'Tidak Aktif','2'=>'Maintenance','3'=>'Rusak'],
             'allows_null' => true,
         ]);
         CRUD::addField([
@@ -275,5 +285,25 @@ class DeviceCrudController extends CrudController
         $this->crud->image = $image;
 
         $this->setupCreateOperation();
+    }
+
+    public function get_by_id(Request $request, $id)
+    {
+        $get = Device::where('device_type_id',$id)->orderBy('name')->get();
+        $response = array();
+        foreach($get as $val){
+            $response[] = array(
+                "id"=>$val->id,
+                "text"=>$val->name
+            );
+        }
+
+        echo json_encode($response);
+        exit;
+    }
+
+    public function show($id)
+    {
+        return Device::find($id);
     }
 }

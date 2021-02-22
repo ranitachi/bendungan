@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use DB;
 use Excel;
+use App\Models\Device;
 use Illuminate\Http\Request;
 use App\Models\PerangkatNilai;
 use App\Imports\ImportNilaiPerangkat;
 use App\Http\Requests\PerangkatNilaiRequest;
+use Backpack\CRUD\app\Http\Controllers\CrudController;
 use App\Http\Requests\PerangkatNilaiRequest as StoreRequest;
 use App\Http\Requests\PerangkatNilaiRequest as UpdateRequest;
-use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
@@ -51,16 +52,18 @@ class PerangkatNilaiCrudController extends CrudController
 
         $this->crud->setValidation(PerangkatNilaiRequest::class);
 
-        $perangkats = PerangkatNilai::select('nama_perangkat')->where('nama_perangkat','!=',"")->groupBy('nama_perangkat')->get();
+        // $perangkats = PerangkatNilai::select('nama_perangkat')->where('nama_perangkat','!=',"")->groupBy('nama_perangkat')->get();
+        $perangkats = Device::with('dev_type')->orderBy('device_type_id')->orderBy('name')->get();
         $perangkat = array();
         foreach($perangkats as $idx => $val)
         {
-            $perangkat[$val->nama_perangkat]=$val->nama_perangkat;
+            $perangkat[$val->id]=$val->dev_type->type.' :: '.$val->name;
         }
-        
+        // return $perangkat;
         $this->crud->addField([  // Select2
             'label'     => "Perangkat",
             'type'      => 'select2_from_array',
+            'allows_multiple' => true,
             'name'      => 'nama_perangkat', 
             'allows_null' => false,
             'placeholder' => '-Pilih-',
@@ -93,10 +96,13 @@ class PerangkatNilaiCrudController extends CrudController
         {
             if($cari!='')
             {
-                $data = PerangkatNilai::where('nama_perangkat','like',"%$cari%")
-                                        ->orWhere('tanggal','like',"%$cari%")
-                                        ->orWhere('nilai','like',"%$cari%")
-                                        ->orderBy('tanggal','desc')->paginate(10);
+                $data = PerangkatNilai::whereHas('perangkat',function($qry) use ($cari){
+                                        $qry->where('name','like',"%$cari%");
+                                    })
+                                    ->orWhereHas('typeperangkat',function($qry) use ($cari){
+                                        $qry->where('type','like',"%$cari%");
+                                    })
+                                    ->orderBy('tanggal','desc')->paginate(10);
             }
             else
                 $data = PerangkatNilai::orderBy('tanggal','desc')->paginate(10);
@@ -122,34 +128,71 @@ class PerangkatNilaiCrudController extends CrudController
         $end_date = date('Y-m-d',strtotime($request->end_date));
         // $this->crud->nama_perangkat = $nama_perangkat;
         // return $end_date;
-        $getdata = PerangkatNilai::where('nama_perangkat','like',"%$nama_perangkat%")->whereBetween('tanggal',[$start_date,$end_date])->orderBy('tanggal')->get();
-        $data_x = $data_y = array();
+        // $getperangkat = D
+        $getdata = PerangkatNilai::whereIn('perangkat_id',$nama_perangkat)->whereBetween('tanggal',[$start_date,$end_date])->with('perangkat')->orderBy('tanggal')->get();
+        $d_x = $d_y = $nameperangkat = $data_x = $data_y = array();
         foreach($getdata as $idx=>$val)
         {
-            $data_x[] = date('d-m-y',strtotime($val->tanggal));
-            $data_y[] = $val->nilai;
+            $d_x[date('d-m-y',strtotime($val->tanggal))] = date('d-m-y',strtotime($val->tanggal));
+            $d_y[$val->perangkat_id][date('d-m-y',strtotime($val->tanggal))] = $val;
+            $nameperangkat[$val->perangkat_id] = $val;
         }
-        // return $getdata;
-        $this->crud->setValidation(PerangkatNilaiRequest::class);
+        sort($d_x);
+        $data_x = $d_x;
 
-        $perangkats = PerangkatNilai::select('nama_perangkat')->where('nama_perangkat','!=',"")->groupBy('nama_perangkat')->get();
+        $index=0;
+        foreach($d_y as $idx => $val)
+        {
+            $nama_per = isset($nameperangkat[$idx]) ? $nameperangkat[$idx]->perangkat->name : '';
+            $data_y[$index]['name'] = $nama_per;
+            foreach($data_x as $idx_tgl => $tgl)
+            {
+                if(isset($d_y[$idx][$tgl]))
+                {
+                    $data_y[$index]['data'][$idx_tgl] = $d_y[$idx][$tgl]->nilai;
+                }
+                else
+                {
+                    $data_y[$index]['data'][$idx_tgl] = 0;
+                }
+            }
+            // $data_y[$index]['data'] = $nama_per;
+        //     foreach($val as $idx_val => $n_val)
+        //     {
+        //         $data_y[$index]['data'][]=$n_val->nilai;
+        //     }
+
+            $index++;
+        }
+
+        $this->crud->setValidation(PerangkatNilaiRequest::class);
+        // return $data_y;
+        $perangkats = Device::with('dev_type')->orderBy('device_type_id')->orderBy('name')->get();
         $perangkat = array();
+        $get_perangkat = array();
         foreach($perangkats as $idx => $val)
         {
-            $perangkat[$val->nama_perangkat]=$val->nama_perangkat;
+            $perangkat[$val->id]=$val->dev_type->type.' :: '.$val->name;
+
+            if(in_array($val->id,$nama_perangkat))
+            {
+                $get_perangkat[] = $val->name;
+            }
         }
 
         $this->crud->addField([  // Select2
             'label'     => "Perangkat",
             'type'      => 'select2_from_array',
             'name'      => 'nama_perangkat', 
+            'allows_multiple' => true,
             'allows_null' => false,
             'placeholder' => '-Pilih-',
             'default' => $nama_perangkat,
             'wrapper'   => [ 
                     'class'      => 'form-group col-md-6'
                 ],
-            'options'   => $perangkat
+            'options'   => $perangkat,
+            'mutiple'   =>  true
         ]);
 
         $this->crud->addField([   // date_range
@@ -166,7 +209,8 @@ class PerangkatNilaiCrudController extends CrudController
                     'locale' => ['format' => 'DD/MM/YYYY']
                 ]
             ]);
-        return view('backpack::crud.perangkat-nilai.grafik',compact('nama_perangkat','data_y','data_x','start_date','end_date'))->with('crud',$this->crud);
+        // return $data_x;
+        return view('backpack::crud.perangkat-nilai.grafik',compact('get_perangkat','nama_perangkat','data_y','data_x','start_date','end_date'))->with('crud',$this->crud);
     }
     // public function index(Request $request){
     //     $this->crud->removeButton('create');
@@ -256,23 +300,41 @@ class PerangkatNilaiCrudController extends CrudController
     {
         CRUD::setValidation(PerangkatNilaiRequest::class);
 
-        $perangkats = PerangkatNilai::select('nama_perangkat')->where('nama_perangkat','!=',"")->groupBy('nama_perangkat')->get();
-        $perangkat = array();
-        foreach($perangkats as $idx => $val)
-        {
-            $perangkat[$val->nama_perangkat]=$val->nama_perangkat;
-        }
+        // $perangkats = PerangkatNilai::select('nama_perangkat')->where('nama_perangkat','!=',"")->groupBy('nama_perangkat')->get();
+        // $perangkat = array();
+        // foreach($perangkats as $idx => $val)
+        // {
+        //     $perangkat[$val->nama_perangkat]=$val->nama_perangkat;
+        // }
         
+        CRUD::addField([
+            'label' => 'Tipe Perangkat',
+            'type' => 'select2',
+            'name' => 'device_type_id',
+            'model'  => "App\Models\DeviceType",
+            'attribute' => 'type',
+            'wrapper'   => [ 
+                'class'      => 'form-group col-md-7'
+            ],
+            'attributes' => [
+                'onchange'        => 'getperangkat(this.value)'
+            ], 
+            'allows_null' => false,
+        ]);
+
         CRUD::addField([  // Select2
-            'label'     => "Perangkat",
+            'label'     => "Nama Perangkat",
             'type'      => 'select2_from_array',
-            'name'      => 'nama_perangkat', 
+            'name'      => 'perangkat_id', 
             'allows_null' => false,
             'placeholder' => '-Pilih-',
+            'attributes' => [
+                'id'        => 'nama_perangkat'
+            ], 
             'wrapper'   => [ 
-                    'class'      => 'form-group col-md-7'
+                    'class'     => 'form-group col-md-7',
                 ],
-            'options'   => $perangkat
+                'options'   => array(),
         ]);
         CRUD::addField([
             'type' => 'date',
@@ -285,7 +347,18 @@ class PerangkatNilaiCrudController extends CrudController
         CRUD::addField([
             'type' => 'text',
             'name' => 'nilai',
-            'label' => 'Nilai',
+            'label' => 'Nilai Bacaan',
+            'wrapper'   => [ 
+                    'class'      => 'form-group col-md-7'
+                ],
+        ]);
+        CRUD::addField([
+            'type' => 'text',
+            'name' => 'nilai_level',
+            'label' => 'Nilai Level',
+            'attributes' => [
+                'id'        => 'nilai_level'
+            ], 
             'wrapper'   => [ 
                     'class'      => 'form-group col-md-7'
                 ],
@@ -299,6 +372,8 @@ class PerangkatNilaiCrudController extends CrudController
                 ],
         ]);
 
+        return redirect('admin/perangkatnilai-list');
+
     }
 
     /**
@@ -309,6 +384,77 @@ class PerangkatNilaiCrudController extends CrudController
      */
     protected function setupUpdateOperation()
     {
-        $this->setupCreateOperation();
+        $id = \Route::current()->parameter('id');
+
+        $get = PerangkatNilai::find($id);
+        $get_perangkat = Device::select('id','name')->where('device_type_id',$get->device_type_id)->orderBy('name')->get()->pluck('name','id')->toArray();
+        // dd($get_perangkat);
+        CRUD::setValidation(PerangkatNilaiRequest::class);
+        CRUD::addField([
+            'label' => 'Tipe Perangkat',
+            'type' => 'select2',
+            'name' => 'device_type_id',
+            'model'  => "App\Models\DeviceType",
+            'attribute' => 'type',
+            'wrapper'   => [ 
+                'class'      => 'form-group col-md-7'
+            ],
+            'attributes' => [
+                'onchange'        => 'getperangkat(this.value)'
+            ], 
+            'allows_null' => false,
+        ]);
+
+        CRUD::addField([  // Select2
+            'label'     => "Nama Perangkat",
+            'type'      => 'select2_from_array',
+            'name'      => 'perangkat_id', 
+            'allows_null' => false,
+            'placeholder' => '-Pilih-',
+            'attributes' => [
+                'id'        => 'nama_perangkat',
+            ], 
+            'wrapper'   => [ 
+                    'class'     => 'form-group col-md-7',
+            ],
+            'options'   => $get_perangkat,
+            'default'   => $get->perangkat_id
+        ]);
+        CRUD::addField([
+            'type' => 'date',
+            'name' => 'tanggal',
+            'label' => 'Tanggal',
+            'wrapper'   => [ 
+                    'class'      => 'form-group col-md-7'
+                ],
+        ]);
+        CRUD::addField([
+            'type' => 'text',
+            'name' => 'nilai',
+            'label' => 'Nilai Bacaan',
+            'wrapper'   => [ 
+                    'class'      => 'form-group col-md-7'
+                ],
+        ]);
+        CRUD::addField([
+            'type' => 'text',
+            'name' => 'nilai_level',
+            'label' => 'Nilai Level',
+            'attributes' => [
+                'id'        => 'nilai_level'
+            ], 
+            'wrapper'   => [ 
+                    'class'      => 'form-group col-md-7',
+                ],
+            
+        ]);
+        CRUD::addField([
+            'type' => 'textarea',
+            'name' => 'keterangan',
+            'label' => 'Keterangan',
+            'wrapper'   => [ 
+                    'class'      => 'form-group col-md-7'
+                ],
+        ]);
     }
 }

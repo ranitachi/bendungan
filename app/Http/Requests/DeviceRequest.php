@@ -30,6 +30,7 @@ class DeviceRequest extends FormRequest
             'code' => 'required',
             'status' => 'required',
             'device_type_id' => 'required',
+            'nilai_level' => 'required',
         ];
     }
 

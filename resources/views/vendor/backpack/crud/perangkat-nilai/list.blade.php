@@ -37,7 +37,7 @@
 							
 						</div>
 						<div class="card-toolbar">
-							<a href="{{ url($crud->route.'/create') }}" class="btn btn-sm btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-plus"></i> {{ trans('backpack::crud.add') }} {{ $crud->entity_name }}</span></a>&nbsp;
+							<a href="{{ url($crud->route.'/create') }}" class="btn btn-sm btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-plus"></i> {{ trans('backpack::crud.add') }} Nilai {{ $crud->entity_name }}</span></a>&nbsp;
 							<a href="{{ url($crud->route) }}" class="btn btn-sm btn-info"><i class="fa fa-angle-double-left"></i> Back To {{ ucwords($crud->entity_name_plural) }}</span></a><br><br>&nbsp;
 						</div>
 					</div>
@@ -74,6 +74,7 @@
 									<thead>
 										<tr>
 											<th>No</th>
+											<th>Type Perangkat</th>
 											<th>Nama Perangkat</th>
 											<th>Tanggal</th>
 											<th>Nilai</th>
@@ -88,7 +89,8 @@
 										@foreach ($data as $item)
 											<tr>
 												<td class="text-center">{{ $no }}</td>
-												<td class="text-left">{{ $item->nama_perangkat }}</td>
+												<td class="text-left">{{ $item->get_type_perangkat }}</td>
+												<td class="text-left">{{ $item->get_nama_perangkat }}</td>
 												<td class="text-center">{{ date('d-m-Y',strtotime($item->tanggal)) }}</td>
 												<td class="text-right">{{ $item->nilai }}</td>
 												<td class="text-left">{{ $item->keterangan }}</td>

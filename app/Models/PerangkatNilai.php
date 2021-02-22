@@ -29,7 +29,14 @@ class PerangkatNilai extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-
+    public function perangkat()
+    {
+        return $this->belongsTo('App\Models\Device','perangkat_id');
+    }
+    public function typeperangkat()
+    {
+        return $this->belongsTo('App\Models\DeviceType','device_type_id');
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
@@ -51,6 +58,27 @@ class PerangkatNilai extends Model
     {
         return '<a class="btn btn-sm btn-warning" href="'.route('perangkatnilai.list').'" data-toggle="tooltip" title="List Nilai"><i class="fa fa-list"></i> List Nilai Perangkat</a>';
     }
+    
+    public function getGetNamaPerangkatAttribute()
+    {
+        if(isset($this->perangkat->name))
+        {
+            return $this->perangkat->name;
+        }
+        else
+            return '-';
+    }
+    public function getGetTypePerangkatAttribute()
+    {
+        if(isset($this->typeperangkat->type))
+        {
+            return $this->typeperangkat->type;
+        }
+        else
+            return '-';
+    }
+
+
     /*
     |--------------------------------------------------------------------------
     | MUTATORS

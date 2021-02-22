@@ -73,3 +73,47 @@
 
 @endsection
 
+@section('footscript')
+	<script>
+		var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+		function getperangkat(val)
+		{
+			// alert(val)
+			$( "#nama_perangkat" ).select2({
+				ajax: { 
+				url: "{{ url('nama-perangkat-by-type') }}/"+val,
+				dataType: 'json',
+				type : 'post',
+				data: function (params) {
+					return {
+						_token: CSRF_TOKEN,
+					};
+				},
+				delay: 250,
+				processResults: function (response) {
+						return {
+							results: response
+						};
+					},
+					cache: true
+				}
+			});
+		}
+		function getperangkatbyid(val)
+		{
+
+			$.ajax({
+				url: "{{ url('admin/device') }}/"+val+'/show',
+				dataType: 'json',
+				success : function(res){
+					$('#nilai_level').val(res.nilai_level);
+				}
+			})
+		}
+
+		$('#nama_perangkat').on('change',function(){
+			var id = $(this).val()
+			getperangkatbyid(id)
+		});
+	</script>
+@endsection

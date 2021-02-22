@@ -62,3 +62,4 @@ Route::get('show-file/{f1}/{f2}/{f3}/{f4}/{f5}',function($f1,$f2,$f3,$f4,$f5){
 });
 
 Route::post('export-laporan','Admin\LaporanPendataanCrudController@export_laporan');
+Route::post('nama-perangkat-by-type/{id_type}','Admin\DeviceCrudController@get_by_id');

@@ -26,7 +26,11 @@ class PerangkatNilaiRequest extends FormRequest
     public function rules()
     {
         return [
-            'nama_perangkat' => 'required',
+            'device_type_id' => 'required',
+            'perangkat_id' => 'required',
+            'tanggal' => 'required',
+            'nilai' => 'required',
+            'nilai_level' => 'required',
         ];
     }
 
