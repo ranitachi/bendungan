@@ -78,6 +78,8 @@
 											<th>Nama Perangkat</th>
 											<th>Tanggal</th>
 											<th>Nilai</th>
+											<th>Nilai Level</th>
+											<th>Nilai Tinggi Air Waduk</th>
 											<th>Keterangan</th>
 											<th>Action</th>
 										</tr>
@@ -93,6 +95,8 @@
 												<td class="text-left">{{ $item->get_nama_perangkat }}</td>
 												<td class="text-center">{{ date('d-m-Y',strtotime($item->tanggal)) }}</td>
 												<td class="text-right">{{ $item->nilai }}</td>
+												<td class="text-right">{{ $item->nilai_level }}</td>
+												<td class="text-right">{{ $item->nilai_tma_waduk }}</td>
 												<td class="text-left">{{ $item->keterangan }}</td>
 												<td class="text-center">
 													<div class="btn-group">

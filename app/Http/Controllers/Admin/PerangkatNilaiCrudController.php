@@ -7,6 +7,7 @@ use Excel;
 use App\Models\Device;
 use Illuminate\Http\Request;
 use App\Models\PerangkatNilai;
+use App\Helpers\FunctionHelper;
 use App\Imports\ImportNilaiPerangkat;
 use App\Http\Requests\PerangkatNilaiRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -92,6 +93,7 @@ class PerangkatNilaiCrudController extends CrudController
     public function list(Request $request)
     {
         $cari = $request->cari;
+        
         if(isset($request->cari))
         {
             if($cari!='')
@@ -113,6 +115,7 @@ class PerangkatNilaiCrudController extends CrudController
         }
         return view('backpack::crud.perangkat-nilai.list')
                     ->with('data',$data)
+                    // ->with('nilai_tma',$nilai_tma)
                     ->with('crud',$this->crud);
     }
 
@@ -130,21 +133,25 @@ class PerangkatNilaiCrudController extends CrudController
         // return $end_date;
         // $getperangkat = D
         $getdata = PerangkatNilai::whereIn('perangkat_id',$nama_perangkat)->whereBetween('tanggal',[$start_date,$end_date])->with('perangkat')->orderBy('tanggal')->get();
-        $d_x = $d_y = $nameperangkat = $data_x = $data_y = array();
+        $d_x = $d_y = $nameperangkat = $data_x = $data_y = $warna = array();
         foreach($getdata as $idx=>$val)
         {
-            $d_x[date('d-m-y',strtotime($val->tanggal))] = date('d-m-y',strtotime($val->tanggal));
-            $d_y[$val->perangkat_id][date('d-m-y',strtotime($val->tanggal))] = $val;
+            $d_x[date('d-m-Y',strtotime($val->tanggal))] = date('d-m-Y',strtotime($val->tanggal));
+            $d_y[$val->perangkat_id][date('d-m-Y',strtotime($val->tanggal))] = $val;
             $nameperangkat[$val->perangkat_id] = $val;
+
+            
         }
         sort($d_x);
         $data_x = $d_x;
 
         $index=0;
+        
         foreach($d_y as $idx => $val)
         {
             $nama_per = isset($nameperangkat[$idx]) ? $nameperangkat[$idx]->perangkat->name : '';
             $data_y[$index]['name'] = $nama_per;
+            $warna[] = '#'.FunctionHelper::random_color();
             foreach($data_x as $idx_tgl => $tgl)
             {
                 if(isset($d_y[$idx][$tgl]))
@@ -165,6 +172,23 @@ class PerangkatNilaiCrudController extends CrudController
             $index++;
         }
 
+        $nilai_tma = FunctionHelper::getnilaitmawaduk();
+        $data_y[$index]['name'] = 'TMA Waduk';
+        $max = array();
+        foreach($data_x as $idx_tgl => $tgl)
+        {
+            $g_tgl = date('Y-m-d',strtotime($tgl));
+            if(isset($nilai_tma[$g_tgl]))
+            {
+                $data_y[$index]['data'][$idx_tgl] = $nilai_tma[$g_tgl];
+                $max[]=$nilai_tma[$g_tgl];
+            }
+            else
+            {
+                $data_y[$index]['data'][$idx_tgl] = 0;
+            }
+        }
+        $warna[] = '#'.FunctionHelper::random_color();
         $this->crud->setValidation(PerangkatNilaiRequest::class);
         // return $data_y;
         $perangkats = Device::with('dev_type')->orderBy('device_type_id')->orderBy('name')->get();
@@ -209,8 +233,9 @@ class PerangkatNilaiCrudController extends CrudController
                     'locale' => ['format' => 'DD/MM/YYYY']
                 ]
             ]);
-        // return $data_x;
-        return view('backpack::crud.perangkat-nilai.grafik',compact('get_perangkat','nama_perangkat','data_y','data_x','start_date','end_date'))->with('crud',$this->crud);
+        // return $warna;
+        $n_max = max($max) + 10;
+        return view('backpack::crud.perangkat-nilai.grafik',compact('n_max','warna','get_perangkat','nama_perangkat','data_y','data_x','start_date','end_date'))->with('crud',$this->crud);
     }
     // public function index(Request $request){
     //     $this->crud->removeButton('create');
@@ -364,6 +389,17 @@ class PerangkatNilaiCrudController extends CrudController
                 ],
         ]);
         CRUD::addField([
+            'type' => 'text',
+            'name' => 'nilai_tma_waduk',
+            'label' => 'Nilai Tinggi Air Waduk',
+            'attributes' => [
+                'id'        => 'nilai_tma_waduk'
+            ], 
+            'wrapper'   => [ 
+                    'class'      => 'form-group col-md-7'
+                ],
+        ]);
+        CRUD::addField([
             'type' => 'textarea',
             'name' => 'keterangan',
             'label' => 'Keterangan',
@@ -447,6 +483,17 @@ class PerangkatNilaiCrudController extends CrudController
                     'class'      => 'form-group col-md-7',
                 ],
             
+        ]);
+        CRUD::addField([
+            'type' => 'text',
+            'name' => 'nilai_tma_waduk',
+            'label' => 'Nilai Tinggi Air Waduk',
+            'attributes' => [
+                'id'        => 'nilai_tma_waduk'
+            ], 
+            'wrapper'   => [ 
+                    'class'      => 'form-group col-md-7'
+                ],
         ]);
         CRUD::addField([
             'type' => 'textarea',

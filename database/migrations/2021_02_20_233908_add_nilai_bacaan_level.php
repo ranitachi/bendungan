@@ -15,6 +15,7 @@ class AddNilaiBacaanLevel extends Migration
     {
         Schema::table('table_nilai_perangkat', function (Blueprint $table) {
             $table->double('nilai_level')->nullable()->after('nilai');
+            $table->double('nilai_tma_waduk')->nullable()->after('nilai_level');
         });
     }
 
@@ -27,6 +28,7 @@ class AddNilaiBacaanLevel extends Migration
     {
         Schema::table('table_nilai_perangkat', function (Blueprint $table) {
             $table->dropColumn('nilai_level');
+            $table->dropColumn('nilai_tma_waduk');
         });
     }
 }

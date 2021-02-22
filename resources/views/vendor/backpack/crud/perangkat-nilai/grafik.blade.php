@@ -144,7 +144,7 @@
 						show: false
 					}
 				},
-				colors: ['#77B6EA', '#545454'],
+				colors: <?php echo json_encode($warna);?>,
 				dataLabels: {
 					enabled: true,
 				},
@@ -175,7 +175,7 @@
 						text: 'Tinggi Muka Air'
 					},
 					min: 0,
-					max: 40
+					max:  <?php echo $n_max;?>,
 				},
 				legend: {
 					position: 'top',

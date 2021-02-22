@@ -31,6 +31,7 @@ class PerangkatNilaiRequest extends FormRequest
             'tanggal' => 'required',
             'nilai' => 'required',
             'nilai_level' => 'required',
+            'nilai_tma_waduk' => 'required',
         ];
     }
 
